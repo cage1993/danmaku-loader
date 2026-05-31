@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Build artifacts
+*.zip
+dist/
+build/
+
+# Test files
+*.xml
+*.ass
+*.ssa
+*.json
+*.txt
+!s01e01.xml
+
+# Temporary files
+tmp/
+temp/

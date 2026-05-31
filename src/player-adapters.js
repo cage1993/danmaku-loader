@@ -150,7 +150,7 @@ const PlayerAdapters = (function() {
       } else if (typeof dm.initDanmaku === 'function') {
         dm.initDanmaku(playerDanmakus);
       }
-      // 方式2: 逐条添加
+      // 方式2: 逐条添加（注意：dm.send 是发送到服务器，不是本地渲染，跳过）
       else if (typeof dm.sendDanmaku === 'function' || typeof dm.addDanmaku === 'function') {
         const addFn = dm.sendDanmaku || dm.addDanmaku;
         playerDanmakus.forEach(d => {

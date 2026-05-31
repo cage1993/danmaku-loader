@@ -7,7 +7,9 @@
 
 **Danmaku Loader** 让你可以把下载好的弹幕文件（XML / ASS / JSON / TXT）加载到视频网站上，和原平台弹幕一起播放。目前支持 Bilibili，架构设计支持未来扩展到 YouTube、腾讯视频等任意平台。
 
-![screenshot](docs/screenshot.png)
+![弹窗界面](images/popup-ui.png)
+
+![弹幕注入效果](images/demo.png)
 
 ---
 
@@ -54,10 +56,12 @@
 
 | 平台 | 域名 | 原生注入 | 自建弹幕层 | 状态 |
 |------|------|----------|------------|------|
-| **Bilibili** | `bilibili.com` | ✅ | ✅ | 已支持 |
+| **Bilibili** | `bilibili.com` | ✅ (部分) | ✅ | 已支持 |
 | YouTube | `youtube.com` | — | 🔮 | 计划中 |
 | 腾讯视频 | `v.qq.com` | — | 🔮 | 计划中 |
 | 爱奇艺 | `iqiyi.com` | — | 🔮 | 计划中 |
+
+> Bilibili 新版播放器（bpx-player）未开放本地弹幕注入 API，目前通过自建弹幕层实现，效果与原生弹幕基本一致。
 
 > 🔮 表示可通过自建弹幕层支持（无需平台开放 API）。欢迎 PR 添加新平台！
 

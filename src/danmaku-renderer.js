@@ -56,16 +56,28 @@ const DanmakuRenderer = (function() {
     load(danmakus) {
       this.clear();
       this.danmakuList = [...danmakus].sort((a, b) => (a.time || 0) - (b.time || 0));
-      this.currentIndex = 0;
-      this.lastVideoTime = -1;
       this.isActive = true;
 
-      // 绑定 seek 事件（用于清空屏幕）
+      // 初始定位到视频当前时间，避免把当前时间之前的弹幕全放出来
+      const currentTime = this.video ? this.video.currentTime : 0;
+      this.lastVideoTime = currentTime;
+      this.currentIndex = 0;
+      while (this.currentIndex < this.danmakuList.length &&
+             this.danmakuList[this.currentIndex].time < currentTime - 0.3) {
+        this.currentIndex++;
+      }
+
+      // 绑定 seek 事件（用于清空屏幕并重新定位）
       if (this.video && !this._onSeek) {
         this._onSeek = () => {
-          // seek 时清空当前屏幕上的弹幕
           if (this.container) this.container.innerHTML = '';
-          this.lastVideoTime = -1;
+          const t = this.video ? this.video.currentTime : 0;
+          this.lastVideoTime = t;
+          this.currentIndex = 0;
+          while (this.currentIndex < this.danmakuList.length &&
+                 this.danmakuList[this.currentIndex].time < t - 0.3) {
+            this.currentIndex++;
+          }
         };
         this.video.addEventListener('seeked', this._onSeek);
       }

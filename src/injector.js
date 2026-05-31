@@ -15,6 +15,8 @@
   // 全局状态
   let renderer = null;
   let currentAdapter = null;
+  let loadedCount = 0;
+  let loadedFileName = '';
 
   /**
    * 获取或创建弹幕渲染器（自建层）
@@ -113,9 +115,23 @@
 
     const { type, payload } = e.data;
 
+    if (type === 'getStatus') {
+      window.postMessage({
+        source: SOURCE,
+        type: 'getStatusResult',
+        payload: {
+          loaded: loadedCount > 0,
+          count: loadedCount,
+          fileName: loadedFileName
+        }
+      }, '*');
+    }
+
     if (type === 'loadDanmaku') {
       try {
+        loadedFileName = payload.fileName || '';
         const result = handleLoadDanmaku(payload.danmakus);
+        loadedCount = result.count;
         window.postMessage({
           source: SOURCE,
           type: 'loadDanmakuResult',
@@ -139,6 +155,28 @@
       }, '*');
     }
   });
+
+  // 监听 URL 变化（SPA 切集时自动清空弹幕）
+  let lastUrl = location.href;
+  setInterval(() => {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      console.log('[外部弹幕] 检测到页面 URL 变化，自动清空弹幕');
+      handleClearDanmaku();
+    }
+  }, 1000);
+
+  // 监听标题变化（辅助检测切集）
+  const titleEl = document.querySelector('title');
+  if (titleEl) {
+    new MutationObserver(() => {
+      if (location.href !== lastUrl) {
+        lastUrl = location.href;
+        console.log('[外部弹幕] 检测到标题变化，自动清空弹幕');
+        handleClearDanmaku();
+      }
+    }).observe(titleEl, { childList: true });
+  }
 
   // 通知 content script injector 已就绪
   window.postMessage({

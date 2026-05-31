@@ -111,7 +111,7 @@
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'loadDanmaku') {
       ensureInjectorLoaded(() => {
-        sendToInjector('loadDanmaku', { danmakus: request.danmakus })
+        sendToInjector('loadDanmaku', { danmakus: request.danmakus, fileName: request.fileName })
           .then(result => {
             sendResponse({ success: true, count: result.count });
           })
@@ -127,6 +127,19 @@
         sendToInjector('clearDanmaku', {})
           .then(() => {
             sendResponse({ success: true });
+          })
+          .catch(err => {
+            sendResponse({ success: false, error: err.message });
+          });
+      });
+      return true;
+    }
+
+    if (request.action === 'getStatus') {
+      ensureInjectorLoaded(() => {
+        sendToInjector('getStatus', {})
+          .then(result => {
+            sendResponse({ success: true, loaded: result.loaded, count: result.count, fileName: result.fileName });
           })
           .catch(err => {
             sendResponse({ success: false, error: err.message });

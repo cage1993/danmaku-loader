@@ -26,6 +26,9 @@ build/
 *.txt
 !s01e01.xml
 
+# Keep manifest.json
+!manifest.json
+
 # Temporary files
 tmp/
 temp/
